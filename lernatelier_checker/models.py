@@ -46,12 +46,16 @@ class ComplianceResult:
     def status(self) -> Status:
         if not self.file_found:
             return Status.RED
-        if not self.name_filled or self.daily_entries_count == 0 or not self.zeitraum_present:
+        if not self.name_filled:
             return Status.RED
-        if (
-            not self.grobplanung_complete
-            or not self.reflexion_present
-            or (self.checkbox_stats is not None and self.checkbox_stats.checked == 0)
-        ):
+        if self.daily_entries_count == 0:
+            return Status.RED
+        if not self.zeitraum_present:
+            return Status.RED
+        if not self.grobplanung_complete:
+            return Status.YELLOW
+        if not self.reflexion_present:
+            return Status.YELLOW
+        if self.checkbox_stats is not None and self.checkbox_stats.checked == 0:
             return Status.YELLOW
         return Status.GREEN
