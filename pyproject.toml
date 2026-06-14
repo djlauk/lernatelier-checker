@@ -15,6 +15,7 @@ lernatelier-checker = "lernatelier_checker.__main__:main"
 
 [project.optional-dependencies]
 test = ["pytest>=8"]
+build = ["pyinstaller>=6"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
