@@ -8,7 +8,7 @@ body = """
 {% endif %}\
 {% set repo = "https://github.com/" ~ remote.github.owner ~ "/" ~ remote.github.repo %}\
 {% for group, commits in commits | group_by(attribute="group") %}
-### {{ group | strtitle }}
+### {{ group }}
 {% for commit in commits %}\
 - {{ commit.message | upper_first }} \
 ([`{{ commit.id | truncate(length=7, end="") }}`]({{ repo }}/commit/{{ commit.id }}))\
