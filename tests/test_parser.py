@@ -1,7 +1,13 @@
 from pathlib import Path
 
 from lernatelier_checker.models import Status
-from lernatelier_checker.parser import NOT_FOUND, _checkbox_stats, _real_content, _section_content, analyse
+from lernatelier_checker.parser import (
+    NOT_FOUND,
+    _checkbox_stats,
+    _real_content,
+    _section_content,
+    analyse,
+)
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -88,7 +94,8 @@ def test_real_content_placeholder_only():
 
 
 def test_real_content_real_text():
-    assert _real_content("Ich möchte meine Noten in Mathematik verbessern und eine 5 erreichen.") is True
+    text = "Ich möchte meine Noten in Mathematik verbessern und eine 5 erreichen."
+    assert _real_content(text) is True
 
 
 def test_real_content_mixed_placeholder_and_real():

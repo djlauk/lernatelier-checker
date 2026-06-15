@@ -35,12 +35,14 @@ class ComplianceResult:
 
     @property
     def grobplanung_complete(self) -> bool:
-        return all([
-            self.overview_grades,
-            self.overview_changes,
-            self.overview_projects,
-            self.overview_goals,
-        ])
+        return all(
+            [
+                self.overview_grades,
+                self.overview_changes,
+                self.overview_projects,
+                self.overview_goals,
+            ]
+        )
 
     @property
     def status(self) -> Status:

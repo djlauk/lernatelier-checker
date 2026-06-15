@@ -24,7 +24,8 @@ def _real_content(text: str) -> bool:
     for fragment in _PLACEHOLDER_FRAGMENTS:
         if fragment.lower() in stripped.lower():
             real = " ".join(
-                line for line in stripped.splitlines()
+                line
+                for line in stripped.splitlines()
                 if not any(f.lower() in line.lower() for f in _PLACEHOLDER_FRAGMENTS)
             )
             return len(real.strip()) >= _MIN_REAL_CHARS
@@ -59,9 +60,7 @@ def analyse(content: str) -> ComplianceResult:
         re.findall(r"^#+\s+(?:Planung\s+)?\d{1,2}\.\d{1,2}\.\d{4}$", content, re.MULTILINE)
     )
 
-    reflexion_m = re.search(
-        r"#+\s+Lernperiode Reflexion\s*\n(.*?)(?=\n#+|\Z)", content, re.DOTALL
-    )
+    reflexion_m = re.search(r"#+\s+Lernperiode Reflexion\s*\n(.*?)(?=\n#+|\Z)", content, re.DOTALL)
     reflexion_text = reflexion_m.group(1) if reflexion_m else ""
     reflexion_present = _real_content(reflexion_text)
 
@@ -71,9 +70,7 @@ def analyse(content: str) -> ComplianceResult:
         zeitraum_present=zeitraum_present,
         overview_grades=_real_content(_section_content(content, "Noten")),
         overview_changes=_real_content(_section_content(content, "Veränderungen")),
-        overview_projects=_real_content(
-            _section_content(content, "Projekte / neue Technologien")
-        ),
+        overview_projects=_real_content(_section_content(content, "Projekte / neue Technologien")),
         overview_goals=_real_content(_section_content(content, "Generelle Ziele")),
         daily_entries_count=daily_count,
         planning_entries_count=0,

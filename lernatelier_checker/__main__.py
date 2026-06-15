@@ -17,7 +17,9 @@ def main() -> int:
         prog="lernatelier-checker",
         description="Check a Lernatelier planning document for completeness.",
     )
-    parser.add_argument("--version", action="version", version=f"%(prog)s {version('lernatelier-checker')}")
+    parser.add_argument(
+        "--version", action="version", version=f"%(prog)s {version('lernatelier-checker')}"
+    )
     parser.add_argument("file", type=Path, help="Path to the Markdown file")
     parser.add_argument(
         "--lang",

@@ -1,5 +1,9 @@
-from lernatelier_checker.formatter import EnglishLinterFormatter, GermanLinterFormatter, JsonFormatter
-from lernatelier_checker.models import CheckboxStats, ComplianceResult, Status
+from lernatelier_checker.formatter import (
+    EnglishLinterFormatter,
+    GermanLinterFormatter,
+    JsonFormatter,
+)
+from lernatelier_checker.models import CheckboxStats, ComplianceResult
 
 
 def _result(**kwargs) -> ComplianceResult:
@@ -108,9 +112,18 @@ class TestJsonFormatter:
     def test_all_fields_present(self):
         data = JsonFormatter().format(_result())
         for field in [
-            "status", "file_found", "name_filled", "zeitraum_present",
-            "overview_grades", "overview_changes", "overview_projects", "overview_goals",
-            "daily_entries_count", "planning_entries_count", "reflexion_present", "checkbox_stats",
+            "status",
+            "file_found",
+            "name_filled",
+            "zeitraum_present",
+            "overview_grades",
+            "overview_changes",
+            "overview_projects",
+            "overview_goals",
+            "daily_entries_count",
+            "planning_entries_count",
+            "reflexion_present",
+            "checkbox_stats",
         ]:
             assert field in data
 

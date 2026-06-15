@@ -1,5 +1,5 @@
-import sys
 import subprocess
+import sys
 from pathlib import Path
 
 FIXTURES = Path(__file__).parent / "fixtures"
