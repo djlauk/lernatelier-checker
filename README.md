@@ -24,7 +24,35 @@ With English output:
 lernatelier-checker Lernperiode-4.md --lang en
 ```
 
+With an explicit config file:
+
+```bash
+lernatelier-checker Lernperiode-4.md --learning-period lernperiode.json
+```
+
 Exit code `0` = green (document complete), `1` = yellow or red (action needed).
+
+### Config file (`lernperiode.json`)
+
+The checker looks for `lernperiode.json` next to the document file. If found, it validates daily entries against the actual school days and checks the reflection deadline.
+
+```json
+{
+  "learningperiod": 4,
+  "days": [
+    "2026-04-24",
+    "2026-05-08",
+    "2026-05-22",
+    "2026-05-29",
+    "2026-06-05",
+    "2026-06-12",
+    "2026-06-19",
+    "2026-06-26"
+  ]
+}
+```
+
+`--learning-period <path>` overrides the default location. If no config is found (and none was explicitly given), date-based checks are skipped with a notice.
 
 ## Example output
 
