@@ -1,9 +1,12 @@
+from datetime import date
 from pathlib import Path
 
 from lernatelier_checker.models import Status
 from lernatelier_checker.parser import (
     NOT_FOUND,
     _checkbox_stats,
+    _day_ok,
+    _parse_day_sections,
     _real_content,
     _section_content,
     analyse,
@@ -64,9 +67,97 @@ def test_analyse_daily_entries_count():
     assert analyse(content).daily_entries_count == 2
 
 
-def test_analyse_planning_entries_counted():
+def test_analyse_planung_heading_counts_as_daily_entry():
     content = "## Planung 03.03.2025\nText"
     assert analyse(content).daily_entries_count == 1
+
+
+def test_parse_day_sections_extracts_dates():
+    content = "## 24.10.2025\n- [x] Task 1\nReflexion\n## 31.10.2025\n- [ ] Task 2\n"
+    sections = _parse_day_sections(content)
+    assert date(2025, 10, 24) in sections
+    assert date(2025, 10, 31) in sections
+
+
+def test_parse_day_sections_planung_heading():
+    content = "## Planung 31.10.2025\n- [ ] Task\n"
+    sections = _parse_day_sections(content)
+    assert date(2025, 10, 31) in sections
+
+
+def test_day_ok_all_checked_with_reflection():
+    body = """\
+- [x] Task 1
+- [x] Task 2
+- [x] Task 3
+Heute habe ich viel über Python gelernt und bin gut vorangekommen.
+"""
+    assert _day_ok(body) is True
+
+
+def test_day_ok_too_few_tasks():
+    body = "- [x] Task 1\n- [x] Task 2\nGute Reflexion heute.\n"
+    assert _day_ok(body) is False
+
+
+def test_day_ok_too_many_tasks():
+    body = "\n".join(f"- [x] Task {i}" for i in range(1, 7)) + "\nReflexion.\n"
+    assert _day_ok(body) is False
+
+
+def test_day_ok_unchecked_tasks():
+    body = "- [x] Task 1\n- [ ] Task 2\n- [x] Task 3\nReflexion.\n"
+    assert _day_ok(body) is False
+
+
+def test_day_ok_no_reflection():
+    body = "- [x] Task 1\n- [x] Task 2\n- [x] Task 3\n"
+    assert _day_ok(body) is False
+
+
+def test_analyse_days_ok_all_complete():
+    period_days = [date(2025, 10, 24), date(2025, 10, 31)]
+    today = date(2025, 10, 31)
+    content = """\
+## 24.10.2025
+- [x] T1
+- [x] T2
+- [x] T3
+Heute war ein produktiver Tag mit vielen Erkenntnissen.
+## 31.10.2025
+- [x] T1
+- [x] T2
+- [x] T3
+Auch heute viel gelernt und die Ziele erreicht.
+"""
+    result = analyse(content, period_days=period_days, today=today)
+    assert result.days_total == 2
+    assert result.days_ok == 2
+
+
+def test_analyse_days_ok_partial():
+    period_days = [date(2025, 10, 24), date(2025, 10, 31)]
+    today = date(2025, 10, 31)
+    content = """\
+## 24.10.2025
+- [x] T1
+- [x] T2
+- [x] T3
+Reflexion war gut heute, alle Aufgaben erledigt.
+## 31.10.2025
+- [ ] T1
+- [ ] T2
+- [ ] T3
+"""
+    result = analyse(content, period_days=period_days, today=today)
+    assert result.days_total == 2
+    assert result.days_ok == 1
+
+
+def test_analyse_days_none_without_period_days():
+    result = analyse("## 24.10.2025\n- [x] T1\n- [x] T2\n- [x] T3\nReflexion.\n")
+    assert result.days_ok is None
+    assert result.days_total is None
 
 
 def test_not_found_file_found_false():

@@ -11,7 +11,6 @@ def _result(**kwargs) -> ComplianceResult:
         overview_projects=True,
         overview_goals=True,
         daily_entries_count=3,
-        planning_entries_count=0,
         reflexion_present=True,
         checkbox_stats=None,
     )

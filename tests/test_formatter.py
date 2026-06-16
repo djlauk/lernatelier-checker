@@ -16,7 +16,6 @@ def _result(**kwargs) -> ComplianceResult:
         overview_projects=True,
         overview_goals=True,
         daily_entries_count=3,
-        planning_entries_count=0,
         reflexion_present=True,
         checkbox_stats=None,
     )
@@ -121,9 +120,10 @@ class TestJsonFormatter:
             "overview_projects",
             "overview_goals",
             "daily_entries_count",
-            "planning_entries_count",
             "reflexion_present",
             "checkbox_stats",
+            "days_ok",
+            "days_total",
         ]:
             assert field in data
 

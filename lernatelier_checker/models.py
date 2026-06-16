@@ -29,9 +29,10 @@ class ComplianceResult:
     overview_projects: bool
     overview_goals: bool
     daily_entries_count: int
-    planning_entries_count: int
     reflexion_present: bool
     checkbox_stats: Optional[CheckboxStats]
+    days_ok: Optional[int] = None
+    days_total: Optional[int] = None
 
     @property
     def grobplanung_complete(self) -> bool:
@@ -59,5 +60,7 @@ class ComplianceResult:
         if not self.reflexion_present:
             return Status.YELLOW
         if self.checkbox_stats is not None and self.checkbox_stats.checked == 0:
+            return Status.YELLOW
+        if self.days_total is not None and self.days_ok < self.days_total:
             return Status.YELLOW
         return Status.GREEN

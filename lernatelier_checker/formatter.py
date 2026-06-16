@@ -131,6 +131,25 @@ def _compute_checks(result: ComplianceResult) -> list[_CheckItem]:
             )
         )
 
+    if result.days_total is not None:
+        ok, total = result.days_ok, result.days_total
+        if ok == total:
+            items.append(
+                _CheckItem(
+                    _Severity.OK,
+                    f"Tage vollständig: {ok}/{total}",
+                    f"Days complete: {ok}/{total}",
+                )
+            )
+        else:
+            items.append(
+                _CheckItem(
+                    _Severity.WARNING,
+                    f"Tage vollständig: {ok}/{total}",
+                    f"Days complete: {ok}/{total}",
+                )
+            )
+
     return items
 
 
@@ -221,11 +240,12 @@ class JsonFormatter:
             "overview_projects": result.overview_projects,
             "overview_goals": result.overview_goals,
             "daily_entries_count": result.daily_entries_count,
-            "planning_entries_count": result.planning_entries_count,
             "reflexion_present": result.reflexion_present,
             "checkbox_stats": (
                 {"total": result.checkbox_stats.total, "checked": result.checkbox_stats.checked}
                 if result.checkbox_stats is not None
                 else None
             ),
+            "days_ok": result.days_ok,
+            "days_total": result.days_total,
         }
