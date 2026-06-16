@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lernatelier-checker"
-version = "0.2.0"
+version = "0.3.0"
 description = "Automated checks for formal aspects of Lernatelier documentation"
 readme = "README.md"
 requires-python = ">=3.12"

@@ -12,6 +12,7 @@
 ### Features
 - Per-day compliance tracking (days_ok / days_total) ([`6fdd7ad`](https://github.com/djlauk/lernatelier-checker/commit/6fdd7ad049b58f72530d0d1ec7394d7766cac936))
 - Load lernperiode.json config for per-day and reflexion checks ([`7ed3a3a`](https://github.com/djlauk/lernatelier-checker/commit/7ed3a3aeabd6df9a74e4274c045c7e5171063a85)) ([#3](https://github.com/djlauk/lernatelier-checker/issues/3))
+- Check if next school day is planned ([`5fe5637`](https://github.com/djlauk/lernatelier-checker/commit/5fe5637f41dd300ad41bab82e6f9bb092cac827b))
 
 **Full changelog:** [v0.1.0...v0.2.0](https://github.com/djlauk/lernatelier-checker/compare/v0.1.0...v0.2.0)
 ## [0.1.0] - 2026-06-14
