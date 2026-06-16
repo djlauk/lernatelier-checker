@@ -90,12 +90,27 @@ def _day_ok(body: str) -> bool:
     return _real_content(non_checkbox)
 
 
-def _compute_day_compliance(content: str, period_days: list[date], today: date) -> tuple[int, int]:
+def _planning_ok(body: str) -> bool:
+    """True if section has at least one checkbox with non-empty text (work packages defined)."""
+    return bool(re.search(r"-\s+\[.\]\s+\S", body, re.IGNORECASE))
+
+
+def _compute_day_compliance(
+    content: str, period_days: list[date], today: date
+) -> tuple[int, int, Optional[bool]]:
     sections = _parse_day_sections(content)
     past_and_today = [d for d in period_days if d <= today]
     days_total = len(past_and_today)
     days_ok = sum(1 for d in past_and_today if d in sections and _day_ok(sections[d]))
-    return days_ok, days_total
+
+    future = [d for d in period_days if d > today]
+    if future:
+        next_day = min(future)
+        next_day_planned: Optional[bool] = next_day in sections and _planning_ok(sections[next_day])
+    else:
+        next_day_planned = None
+
+    return days_ok, days_total, next_day_planned
 
 
 def analyse(
@@ -119,9 +134,9 @@ def analyse(
     reflexion_text = reflexion_m.group(1) if reflexion_m else ""
     reflexion_present = _real_content(reflexion_text)
 
-    days_ok, days_total = None, None
+    days_ok, days_total, next_day_planned = None, None, None
     if period_days and today is not None:
-        days_ok, days_total = _compute_day_compliance(content, period_days, today)
+        days_ok, days_total, next_day_planned = _compute_day_compliance(content, period_days, today)
 
     return ComplianceResult(
         file_found=True,
@@ -136,6 +151,7 @@ def analyse(
         checkbox_stats=_checkbox_stats(content),
         days_ok=days_ok,
         days_total=days_total,
+        next_day_planned=next_day_planned,
     )
 
 

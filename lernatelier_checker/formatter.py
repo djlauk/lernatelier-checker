@@ -150,6 +150,23 @@ def _compute_checks(result: ComplianceResult) -> list[_CheckItem]:
                 )
             )
 
+    if result.next_day_planned is True:
+        items.append(
+            _CheckItem(
+                _Severity.OK,
+                "Nächster Kurstag geplant",
+                "Next school day planned",
+            )
+        )
+    elif result.next_day_planned is False:
+        items.append(
+            _CheckItem(
+                _Severity.WARNING,
+                "Nächster Kurstag nicht geplant – Arbeitspakete fehlen",
+                "Next school day not planned – work packages missing",
+            )
+        )
+
     return items
 
 
