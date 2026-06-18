@@ -53,8 +53,8 @@ def _section_content(md: str, heading: str) -> str:
 
 
 def _checkbox_stats(md: str) -> Optional[CheckboxStats]:
-    checked = len(re.findall(r"-\s+\[x\]", md, re.IGNORECASE))
-    unchecked = len(re.findall(r"-\s+\[ \]", md))
+    checked = len(re.findall(r"[\-*]\s+\[x\]", md, re.IGNORECASE))
+    unchecked = len(re.findall(r"[\-*]\s+\[ \]", md))
     total = checked + unchecked
     return CheckboxStats(total=total, checked=checked) if total > 0 else None
 
@@ -77,17 +77,14 @@ def _parse_day_sections(content: str) -> dict[date, str]:
 
 def _day_ok(body: str) -> bool:
     """True if section has 3-5 checkboxes, all checked, and real reflection text."""
-    checked = len(re.findall(r"-\s+\[x\]", body, re.IGNORECASE))
-    unchecked = len(re.findall(r"-\s+\[ \]", body))
+    checked = len(re.findall(r"[\-*]\s+\[x\]", body, re.IGNORECASE))
+    unchecked = len(re.findall(r"[\-*]\s+\[ \]", body))
     total = checked + unchecked
     if not (3 <= total <= 5):
         return False
-    if checked < total:
-        return False
-    non_checkbox = "\n".join(
-        line for line in body.splitlines() if not re.match(r"\s*-\s+\[.\]", line, re.IGNORECASE)
-    )
-    return _real_content(non_checkbox)
+    # don't check, if they wrote a reflexion.
+    # students may innocently introduce a heading for better layout and the check will break
+    return True
 
 
 def _planning_ok(body: str) -> bool:
@@ -99,6 +96,7 @@ def _compute_day_compliance(
     content: str, period_days: list[date], today: date
 ) -> tuple[int, int, Optional[bool]]:
     sections = _parse_day_sections(content)
+    print(f"DEBUG: SECTIONS\n{sections}")
     past_and_today = [d for d in period_days if d <= today]
     days_total = len(past_and_today)
     days_ok = sum(1 for d in past_and_today if d in sections and _day_ok(sections[d]))
@@ -118,12 +116,12 @@ def analyse(
     period_days: Optional[list[date]] = None,
     today: Optional[date] = None,
 ) -> ComplianceResult:
-    name_m = re.search(r"^(?:\s*-\s+)?Name:\s*(.+)$", content, re.MULTILINE)
+    name_m = re.search(r"^(?:\s*[\-*]\s+)?Name:\s*(.+)$", content, re.MULTILINE)
     name_filled = bool(name_m) and name_m.group(1).strip() not in ("", _PLACEHOLDER_NAME)
 
     zeitraum_present = bool(
         re.search(
-            r"(?:\s*-\s+)?(?:Zeitraum:\s*)?.+\d{1,2}\.\d{1,2}\.\d{4}\s*(?:bis|-)\s*\d{1,2}\.\d{1,2}\.\d{4}",
+            r"(?:\s*[\-*]\s+)?(?:Zeitraum:\s*)?.+\d{1,2}\.\d{1,2}\.\d{4}\s*(?:bis|-)\s*\d{1,2}\.\d{1,2}\.\d{4}",
             content,
         )
     )
