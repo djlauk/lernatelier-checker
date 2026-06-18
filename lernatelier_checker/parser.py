@@ -96,7 +96,6 @@ def _compute_day_compliance(
     content: str, period_days: list[date], today: date
 ) -> tuple[int, int, Optional[bool]]:
     sections = _parse_day_sections(content)
-    print(f"DEBUG: SECTIONS\n{sections}")
     past_and_today = [d for d in period_days if d <= today]
     days_total = len(past_and_today)
     days_ok = sum(1 for d in past_and_today if d in sections and _day_ok(sections[d]))
