@@ -26,6 +26,9 @@ _MIN_REAL_CHARS = 20
 
 _DATE_HEADING = re.compile(r"^#+\s+(?:Planung\s+)?(\d{1,2})\.(\d{1,2})\.(\d{4})\s*$", re.MULTILINE)
 _ANY_HEADING = re.compile(r"^#+\s+", re.MULTILINE)
+_CHECKED_CHECKBOX = re.compile(r"[\-*]\s+\[x\]\s+\S+", re.IGNORECASE)
+_UNCHECKED_CHECKBOX = re.compile(r"[\-*]\s+\[ \]\s+\S+")
+_ANY_CHECKBOX = re.compile(r"[\-*]\s+\[.\]\s+\S+")
 
 
 def _real_content(text: str) -> bool:
@@ -53,8 +56,8 @@ def _section_content(md: str, heading: str) -> str:
 
 
 def _checkbox_stats(md: str) -> Optional[CheckboxStats]:
-    checked = len(re.findall(r"[\-*]\s+\[x\]", md, re.IGNORECASE))
-    unchecked = len(re.findall(r"[\-*]\s+\[ \]", md))
+    checked = len(_CHECKED_CHECKBOX.findall(md))
+    unchecked = len(_UNCHECKED_CHECKBOX.findall(md))
     total = checked + unchecked
     return CheckboxStats(total=total, checked=checked) if total > 0 else None
 
@@ -77,8 +80,8 @@ def _parse_day_sections(content: str) -> dict[date, str]:
 
 def _day_ok(body: str) -> bool:
     """True if section has 3-5 checkboxes, all checked, and real reflection text."""
-    checked = len(re.findall(r"[\-*]\s+\[x\]", body, re.IGNORECASE))
-    unchecked = len(re.findall(r"[\-*]\s+\[ \]", body))
+    checked = len(_CHECKED_CHECKBOX.findall(body))
+    unchecked = len(_UNCHECKED_CHECKBOX.findall(body))
     total = checked + unchecked
     if not (3 <= total <= 5):
         return False
@@ -88,8 +91,8 @@ def _day_ok(body: str) -> bool:
 
 
 def _planning_ok(body: str) -> bool:
-    """True if section has at least one checkbox with non-empty text (work packages defined)."""
-    return bool(re.search(r"-\s+\[.\]\s+\S", body, re.IGNORECASE))
+    """True if section has 3 to 5 checkboxes (work packages defined)."""
+    return _day_ok(body)
 
 
 def _compute_day_compliance(
