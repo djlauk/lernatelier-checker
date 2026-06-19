@@ -79,19 +79,18 @@ def _parse_day_sections(content: str) -> dict[date, str]:
 
 
 def _day_ok(body: str) -> bool:
-    """True if section has 3-5 checkboxes, all checked, and real reflection text."""
-    checked = len(_CHECKED_CHECKBOX.findall(body))
-    unchecked = len(_UNCHECKED_CHECKBOX.findall(body))
-    total = checked + unchecked
-    if not (3 <= total <= 5):
+    """True if section has at least 3 checkboxes."""
+    total = len(_ANY_CHECKBOX.findall(body))
+    if total < 3:
         return False
     # don't check, if they wrote a reflexion.
-    # students may innocently introduce a heading for better layout and the check will break
+    # students may innocently introduce a heading for
+    # better layout and the check will break
     return True
 
 
 def _planning_ok(body: str) -> bool:
-    """True if section has 3 to 5 checkboxes (work packages defined)."""
+    """True if section has at least 3 checkboxes (work packages defined)."""
     return _day_ok(body)
 
 
