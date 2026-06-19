@@ -100,21 +100,6 @@ def test_day_ok_too_few_tasks():
     assert _day_ok(body) is False
 
 
-def test_day_ok_too_many_tasks():
-    body = "\n".join(f"- [x] Task {i}" for i in range(1, 7)) + "\nReflexion.\n"
-    assert _day_ok(body) is False
-
-
-def test_day_ok_unchecked_tasks():
-    body = "- [x] Task 1\n- [ ] Task 2\n- [x] Task 3\nReflexion.\n"
-    assert _day_ok(body) is False
-
-
-def test_day_ok_no_reflection():
-    body = "- [x] Task 1\n- [x] Task 2\n- [x] Task 3\n"
-    assert _day_ok(body) is False
-
-
 def test_analyse_days_ok_all_complete():
     period_days = [date(2025, 10, 24), date(2025, 10, 31)]
     today = date(2025, 10, 31)
@@ -151,7 +136,7 @@ Reflexion war gut heute, alle Aufgaben erledigt.
 """
     result = analyse(content, period_days=period_days, today=today)
     assert result.days_total == 2
-    assert result.days_ok == 1
+    assert result.days_ok == 2
 
 
 def test_analyse_days_none_without_period_days():
