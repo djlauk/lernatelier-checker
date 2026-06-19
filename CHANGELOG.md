@@ -1,4 +1,15 @@
 # Changelog
+## [0.4.0] - 2026-06-19
+
+### Bug Fixes
+- Recognize lists with * and don't check for daily reflection ([`54b69d9`](https://github.com/djlauk/lernatelier-checker/commit/54b69d988c876071fa431f5c102d463d158d9c9f)) ([#1](https://github.com/djlauk/lernatelier-checker/issues/1))
+
+
+### Refactoring
+- Remove debug printout ([`278fb30`](https://github.com/djlauk/lernatelier-checker/commit/278fb30a509518792793ddc2ece3e3d3aab239c4))
+- Use constants for checkbox regexes ([`433bc31`](https://github.com/djlauk/lernatelier-checker/commit/433bc31b2414969ac7c38a3eedf4bb86dc457d71))
+
+**Full changelog:** [v0.3.0...v0.4.0](https://github.com/djlauk/lernatelier-checker/compare/v0.3.0...v0.4.0)
 ## [0.2.0] - 2026-06-16
 
 ### Build
