@@ -16,7 +16,7 @@ def _result(**kwargs) -> ComplianceResult:
         overview_projects=True,
         overview_goals=True,
         daily_entries_count=3,
-        reflexion_present=True,
+        reflection_present=True,
         checkbox_stats=None,
     )
     defaults.update(kwargs)
@@ -50,7 +50,7 @@ class TestGermanLinterFormatter:
         assert "🔴" in out
 
     def test_warning_for_missing_reflexion(self):
-        out = GermanLinterFormatter().format(_result(reflexion_present=False), "test.md")
+        out = GermanLinterFormatter().format(_result(reflection_present=False), "test.md")
         assert "WARNUNG" in out
         assert "🟡" in out
 
@@ -81,7 +81,7 @@ class TestEnglishLinterFormatter:
         assert "FEHLER" not in out
 
     def test_warning_not_warnung(self):
-        out = EnglishLinterFormatter().format(_result(reflexion_present=False), "test.md")
+        out = EnglishLinterFormatter().format(_result(reflection_present=False), "test.md")
         assert "WARNING" in out
         assert "WARNUNG" not in out
 
@@ -94,7 +94,7 @@ class TestEnglishLinterFormatter:
         assert "action needed" in out
 
     def test_yellow_message_english(self):
-        out = EnglishLinterFormatter().format(_result(reflexion_present=False), "test.md")
+        out = EnglishLinterFormatter().format(_result(reflection_present=False), "test.md")
         assert "improvements needed" in out
 
 
@@ -120,7 +120,7 @@ class TestJsonFormatter:
             "overview_projects",
             "overview_goals",
             "daily_entries_count",
-            "reflexion_present",
+            "reflection_present",
             "checkbox_stats",
             "days_ok",
             "days_total",

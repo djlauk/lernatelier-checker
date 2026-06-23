@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import date
 from enum import Enum
 from typing import Optional
 
@@ -29,11 +30,13 @@ class ComplianceResult:
     overview_projects: bool
     overview_goals: bool
     daily_entries_count: int
-    reflexion_present: bool
+    reflection_present: bool
     checkbox_stats: Optional[CheckboxStats]
     days_ok: Optional[int] = None
     days_total: Optional[int] = None
     next_day_planned: Optional[bool] = None
+    reflection_due: Optional[date] = None
+    reflection_pending: Optional[bool] = None
 
     @property
     def grobplanung_complete(self) -> bool:
@@ -58,7 +61,7 @@ class ComplianceResult:
             return Status.RED
         if not self.grobplanung_complete:
             return Status.YELLOW
-        if not self.reflexion_present:
+        if not self.reflection_present and not self.reflection_pending:
             return Status.YELLOW
         if self.checkbox_stats is not None and self.checkbox_stats.checked == 0:
             return Status.YELLOW

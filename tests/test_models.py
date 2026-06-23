@@ -11,7 +11,7 @@ def _result(**kwargs) -> ComplianceResult:
         overview_projects=True,
         overview_goals=True,
         daily_entries_count=3,
-        reflexion_present=True,
+        reflection_present=True,
         checkbox_stats=None,
     )
     defaults.update(kwargs)
@@ -69,7 +69,7 @@ def test_status_yellow_grobplanung_incomplete():
 
 
 def test_status_yellow_no_reflexion():
-    assert _result(reflexion_present=False).status == Status.YELLOW
+    assert _result(reflection_present=False).status == Status.YELLOW
 
 
 def test_status_yellow_all_checkboxes_unchecked():

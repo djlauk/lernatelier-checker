@@ -120,7 +120,14 @@ def _compute_checks(result: ComplianceResult) -> list[_CheckItem]:
                 )
             )
 
-    if result.reflexion_present:
+    if result.reflection_pending:
+        due = result.reflection_due.strftime("%d.%m.%Y") if result.reflection_due else "?"
+        items.append(_CheckItem(
+            _Severity.OK,
+            f"Reflexion ausstehend (fällig {due})",
+            f"Reflection pending (due {due})",
+        ))
+    elif result.reflection_present:
         items.append(_CheckItem(_Severity.OK, "Reflexion vorhanden", "Reflection present"))
     else:
         items.append(
@@ -257,7 +264,7 @@ class JsonFormatter:
             "overview_projects": result.overview_projects,
             "overview_goals": result.overview_goals,
             "daily_entries_count": result.daily_entries_count,
-            "reflexion_present": result.reflexion_present,
+            "reflection_present": result.reflection_present,
             "checkbox_stats": (
                 {"total": result.checkbox_stats.total, "checked": result.checkbox_stats.checked}
                 if result.checkbox_stats is not None
@@ -265,4 +272,7 @@ class JsonFormatter:
             ),
             "days_ok": result.days_ok,
             "days_total": result.days_total,
+            "next_day_planned": result.next_day_planned,
+            "reflection_due": result.reflection_due,
+            "reflection_pending": result.reflection_pending,
         }

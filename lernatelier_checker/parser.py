@@ -129,13 +129,16 @@ def analyse(
 
     daily_count = len(_DATE_HEADING.findall(content))
 
-    reflexion_m = re.search(r"#+\s+Lernperiode Reflexion\s*\n(.*?)(?=\n#+|\Z)", content, re.DOTALL)
-    reflexion_text = reflexion_m.group(1) if reflexion_m else ""
-    reflexion_present = _real_content(reflexion_text)
+    reflection_m = re.search(r"#+\s+Lernperiode Reflexion\s*\n(.*?)(?=\n#+|\Z)", content, re.DOTALL)
+    reflection_text = reflection_m.group(1) if reflection_m else ""
+    reflection_present = _real_content(reflection_text)
 
     days_ok, days_total, next_day_planned = None, None, None
+    reflection_due, reflection_pending = None, None
     if period_days and today is not None:
         days_ok, days_total, next_day_planned = _compute_day_compliance(content, period_days, today)
+        reflection_due = period_days[-1]
+        reflection_pending = today < reflection_due
 
     return ComplianceResult(
         file_found=True,
@@ -146,11 +149,13 @@ def analyse(
         overview_projects=_real_content(_section_content(content, "Projekte / neue Technologien")),
         overview_goals=_real_content(_section_content(content, "Generelle Ziele")),
         daily_entries_count=daily_count,
-        reflexion_present=reflexion_present,
+        reflection_present=reflection_present,
         checkbox_stats=_checkbox_stats(content),
         days_ok=days_ok,
         days_total=days_total,
         next_day_planned=next_day_planned,
+        reflection_due=reflection_due,
+        reflection_pending=reflection_pending,
     )
 
 
@@ -163,6 +168,6 @@ NOT_FOUND = ComplianceResult(
     overview_projects=False,
     overview_goals=False,
     daily_entries_count=0,
-    reflexion_present=False,
+    reflection_present=False,
     checkbox_stats=None,
 )
