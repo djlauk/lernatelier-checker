@@ -62,7 +62,11 @@ class ComplianceResult:
             return Status.YELLOW
         if self.checkbox_stats is not None and self.checkbox_stats.checked == 0:
             return Status.YELLOW
-        if self.days_total is not None and self.days_ok < self.days_total:
+        if (
+            self.days_total is not None
+            and self.days_ok is not None
+            and self.days_ok < self.days_total
+        ):
             return Status.YELLOW
         if self.next_day_planned is False:
             return Status.YELLOW
