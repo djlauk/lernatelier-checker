@@ -33,6 +33,7 @@ class ComplianceResult:
     reflection_present: bool
     checkbox_stats: Optional[CheckboxStats]
     days_ok: Optional[int] = None
+    days_absent: Optional[int] = None
     days_total: Optional[int] = None
     next_day_planned: Optional[bool] = None
     reflection_due: Optional[date] = None

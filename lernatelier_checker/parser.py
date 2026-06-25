@@ -25,6 +25,7 @@ _PLACEHOLDER_FRAGMENTS = _PLACEHOLDER_SENTENCES + _PLACEHOLDER_STARTERS
 _MIN_REAL_CHARS = 20
 
 _DATE_HEADING = re.compile(r"^#+\s+(?:Planung\s+)?(\d{1,2})\.(\d{1,2})\.(\d{4})\s*$", re.MULTILINE)
+_ABSENCE_KEYWORDS = frozenset({"krank", "krankheit", "abwesend", "absenz"})
 _ANY_HEADING = re.compile(r"^#+\s+", re.MULTILINE)
 _CHECKED_CHECKBOX = re.compile(r"[\-*]\s+\[x\]\s+\S+", re.IGNORECASE)
 _UNCHECKED_CHECKBOX = re.compile(r"[\-*]\s+\[ \]\s+\S+")
@@ -78,6 +79,11 @@ def _parse_day_sections(content: str) -> dict[date, str]:
     return sections
 
 
+def _day_absent(body: str) -> bool:
+    """True if any line in the section body is a lone absence keyword."""
+    return any(line.strip().lower() in _ABSENCE_KEYWORDS for line in body.splitlines())
+
+
 def _day_ok(body: str) -> bool:
     """True if section has at least 3 checkboxes."""
     total = len(_ANY_CHECKBOX.findall(body))
@@ -96,11 +102,15 @@ def _planning_ok(body: str) -> bool:
 
 def _compute_day_compliance(
     content: str, period_days: list[date], today: date
-) -> tuple[int, int, Optional[bool]]:
+) -> tuple[int, int, int, Optional[bool]]:
     sections = _parse_day_sections(content)
     past_and_today = [d for d in period_days if d <= today]
     days_total = len(past_and_today)
-    days_ok = sum(1 for d in past_and_today if d in sections and _day_ok(sections[d]))
+    days_absent = sum(1 for d in past_and_today if d in sections and _day_absent(sections[d]))
+    days_ok = sum(
+        1 for d in past_and_today
+        if d in sections and (_day_absent(sections[d]) or _day_ok(sections[d]))
+    )
 
     future = [d for d in period_days if d > today]
     if future:
@@ -109,7 +119,7 @@ def _compute_day_compliance(
     else:
         next_day_planned = None
 
-    return days_ok, days_total, next_day_planned
+    return days_ok, days_absent, days_total, next_day_planned
 
 
 def analyse(
@@ -133,10 +143,10 @@ def analyse(
     reflection_text = reflection_m.group(1) if reflection_m else ""
     reflection_present = _real_content(reflection_text)
 
-    days_ok, days_total, next_day_planned = None, None, None
+    days_ok, days_absent, days_total, next_day_planned = None, None, None, None
     reflection_due, reflection_pending = None, None
     if period_days and today is not None:
-        days_ok, days_total, next_day_planned = _compute_day_compliance(content, period_days, today)
+        days_ok, days_absent, days_total, next_day_planned = _compute_day_compliance(content, period_days, today)
         reflection_due = period_days[-1]
         reflection_pending = today < reflection_due
 
@@ -152,6 +162,7 @@ def analyse(
         reflection_present=reflection_present,
         checkbox_stats=_checkbox_stats(content),
         days_ok=days_ok,
+        days_absent=days_absent,
         days_total=days_total,
         next_day_planned=next_day_planned,
         reflection_due=reflection_due,
