@@ -1,4 +1,15 @@
 # Changelog
+## [0.5.0] - 2026-06-26
+
+### Features
+- Add reflection_due and reflection_pending; rename reflexion_present ([`3043b2d`](https://github.com/djlauk/lernatelier-checker/commit/3043b2d0ddcb70deceb349ad418e81157bca6d1c))
+- Track days_absent for graceful absence handling ([`0d2a5f1`](https://github.com/djlauk/lernatelier-checker/commit/0d2a5f16d34d97edb3da9eba0e329ce20f187fb9)) ([#2](https://github.com/djlauk/lernatelier-checker/issues/2))
+
+
+### Refactoring
+- Check days_ok and days_total before comparison ([`61fc440`](https://github.com/djlauk/lernatelier-checker/commit/61fc440bae50ce8ff4ccb6cf63e5df16e1d485f4))
+
+**Full changelog:** [v0.4.0...v0.5.0](https://github.com/djlauk/lernatelier-checker/compare/v0.4.0...v0.5.0)
 ## [0.4.0] - 2026-06-19
 
 ### Bug Fixes
