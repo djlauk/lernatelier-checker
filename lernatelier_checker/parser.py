@@ -108,7 +108,8 @@ def _compute_day_compliance(
     days_total = len(past_and_today)
     days_absent = sum(1 for d in past_and_today if d in sections and _day_absent(sections[d]))
     days_ok = sum(
-        1 for d in past_and_today
+        1
+        for d in past_and_today
         if d in sections and (_day_absent(sections[d]) or _day_ok(sections[d]))
     )
 
@@ -146,7 +147,9 @@ def analyse(
     days_ok, days_absent, days_total, next_day_planned = None, None, None, None
     reflection_due, reflection_pending = None, None
     if period_days and today is not None:
-        days_ok, days_absent, days_total, next_day_planned = _compute_day_compliance(content, period_days, today)
+        days_ok, days_absent, days_total, next_day_planned = _compute_day_compliance(
+            content, period_days, today
+        )
         reflection_due = period_days[-1]
         reflection_pending = today < reflection_due
 

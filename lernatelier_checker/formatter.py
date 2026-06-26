@@ -122,11 +122,13 @@ def _compute_checks(result: ComplianceResult) -> list[_CheckItem]:
 
     if result.reflection_pending:
         due = result.reflection_due.strftime("%d.%m.%Y") if result.reflection_due else "?"
-        items.append(_CheckItem(
-            _Severity.OK,
-            f"Reflexion ausstehend (fällig {due})",
-            f"Reflection pending (due {due})",
-        ))
+        items.append(
+            _CheckItem(
+                _Severity.OK,
+                f"Reflexion ausstehend (fällig {due})",
+                f"Reflection pending (due {due})",
+            )
+        )
     elif result.reflection_present:
         items.append(_CheckItem(_Severity.OK, "Reflexion vorhanden", "Reflection present"))
     else:
@@ -141,12 +143,16 @@ def _compute_checks(result: ComplianceResult) -> list[_CheckItem]:
     if result.days_total is not None:
         ok, total = result.days_ok, result.days_total
         sev = _Severity.OK if ok == total else _Severity.WARNING
-        items.append(_CheckItem(sev, f"Tage vollständig: {ok}/{total}", f"Days complete: {ok}/{total}"))
+        items.append(
+            _CheckItem(sev, f"Tage vollständig: {ok}/{total}", f"Days complete: {ok}/{total}")
+        )
         absent = result.days_absent or 0
         if absent > 0:
             day_de = "Tag" if absent == 1 else "Tage"
             day_en = "day" if absent == 1 else "days"
-            items.append(_CheckItem(_Severity.OK, f"{absent} {day_de} abwesend", f"{absent} {day_en} absent"))
+            items.append(
+                _CheckItem(_Severity.OK, f"{absent} {day_de} abwesend", f"{absent} {day_en} absent")
+            )
 
     if result.next_day_planned is True:
         items.append(
