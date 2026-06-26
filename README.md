@@ -5,7 +5,7 @@ Checks a Lernatelier planning document (`Lernperiode-N.md`) for completeness and
 ## Installation (Python)
 
 ```bash
-pip install git+https://github.com/TEACHER/lernatelier-checker.git
+pip install git+https://github.com/djlauk/lernatelier-checker.git
 ```
 
 ## Installation (Windows, no Python)
@@ -87,7 +87,7 @@ Usage: run from cmd or drag a `Lernperiode-N.md` file onto the `.exe`:
 lernatelier-checker.exe Lernperiode-4.md
 ```
 
-A pre-built `.exe` can be attached to a GitHub Release for direct download — no installation needed.
+Pre-built `.exe` files are attached to GitHub Releases for direct download — no installation needed.
 
 ## Source code
 
